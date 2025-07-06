@@ -6,7 +6,15 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "dev": "node --watch index.js"
+    "dev": "node --watch index.js",
+    "docker:build": "docker build -t github-stats-card .",
+    "docker:build-dev": "docker build -f Dockerfile.dev -t github-stats-card:dev .",
+    "docker:run": "docker run -p 3000:3000 --env-file .env github-stats-card",
+    "docker:run-dev": "docker run -p 3000:3000 --env-file .env -v $(pwd):/app github-stats-card:dev",
+    "compose:up": "docker-compose up -d",
+    "compose:down": "docker-compose down",
+    "compose:dev": "docker-compose --profile dev up -d app-dev",
+    "compose:logs": "docker-compose logs -f"
   },
   "keywords": [
     "github",
