@@ -87,24 +87,30 @@ vercel
 
 ## カードテーマ
 
-3つのテーマから選択できます：
+4つのユニークなテーマから選択できます：
 
 ### Default テーマ（デフォルト）
-標準的な横バーチャートとレジェンド表示
+標準的な横バーチャートとレジェンド表示（495x195px）
 ```markdown
 ![Most Used Languages](http://localhost:3000/api/languages?username=YOUR_USERNAME)
 ```
 
-### Compact テーマ
-コンパクトなサイズで各言語を個別のバーで表示
+### Pie テーマ
+グラデーション背景とパイチャートで表示（400x250px）
 ```markdown
-![Most Used Languages](http://localhost:3000/api/languages?username=YOUR_USERNAME&theme=compact)
+![Most Used Languages](http://localhost:3000/api/languages?username=YOUR_USERNAME&theme=pie)
 ```
 
-### Donut テーマ
-ドーナツチャートで視覚的に言語の割合を表示
+### Wave テーマ
+ダークモードで波形のビジュアライゼーション（495x220px）
 ```markdown
-![Most Used Languages](http://localhost:3000/api/languages?username=YOUR_USERNAME&theme=donut)
+![Most Used Languages](http://localhost:3000/api/languages?username=YOUR_USERNAME&theme=wave)
+```
+
+### Grid テーマ
+言語をカラフルなグリッドレイアウトで表示（450x300px）
+```markdown
+![Most Used Languages](http://localhost:3000/api/languages?username=YOUR_USERNAME&theme=grid)
 ```
 
 ## カスタマイズ

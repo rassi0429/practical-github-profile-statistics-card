@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Language Statistics Card</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #0d1117;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, #161b22 0%, #1f2937 100%);
+            border-radius: 16px;
+            padding: 32px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 
+                        0 0 80px rgba(64, 192, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .github-icon {
+            width: 32px;
+            height: 32px;
+            margin-right: 16px;
+            fill: #8b949e;
+        }
+
+        .title {
+            color: #f0f6fc;
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: #8b949e;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .language-bar {
+            height: 12px;
+            background: #161b22;
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+            margin-bottom: 32px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .language-segment {
+            height: 100%;
+            position: relative;
+        }
+
+        .language-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .language-item:last-child {
+            border-bottom: none;
+        }
+
+        .language-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .language-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .language-name {
+            color: #f0f6fc;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .language-stats {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .percentage {
+            color: #8b949e;
+            font-size: 14px;
+            font-weight: 600;
+            min-width: 50px;
+            text-align: right;
+        }
+
+        .lines-count {
+            color: #6e7681;
+            font-size: 12px;
+        }
+
+        .total-stats {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            color: #40c0ff;
+            font-size: 24px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 4px;
+            text-shadow: 0 0 20px rgba(64, 192, 255, 0.5);
+        }
+
+        .stat-label {
+            color: #8b949e;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .floating-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(64, 192, 255, 0.6);
+            border-radius: 50%;
+            animation: float 10s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stats-card">
+        <div class="card-header">
+            <svg class="github-icon" viewBox="0 0 16 16">
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            <div>
+                <h1 class="title">Language Statistics</h1>
+                <p class="subtitle">Repository Composition Analysis</p>
+            </div>
+        </div>
+
+        <div class="language-bar" id="languageBar"></div>
+
+        <div class="languages-list" id="languagesList"></div>
+    </div>
+
+    <script>
+        // Language data with GitHub colors
+        const languages = [
+            { name: 'JavaScript', percentage: 45.3, lines: 125420, color: '#f1e05a' },
+            { name: 'TypeScript', percentage: 28.7, lines: 79412, color: '#3178c6' },
+            { name: 'Python', percentage: 12.4, lines: 34285, color: '#3572A5' },
+            { name: 'CSS', percentage: 7.8, lines: 21573, color: '#563d7c' },
+            { name: 'HTML', percentage: 3.2, lines: 8847, color: '#e34c26' },
+            { name: 'Shell', percentage: 1.8, lines: 4976, color: '#89e051' },
+            { name: 'Other', percentage: 0.8, lines: 2211, color: '#ccc' }
+        ];
+
+        // Create language bar segments
+        const languageBar = document.getElementById('languageBar');
+        languages.forEach((lang, index) => {
+            const segment = document.createElement('div');
+            segment.className = 'language-segment';
+            segment.style.width = `${lang.percentage}%`;
+            segment.style.backgroundColor = lang.color;
+            segment.title = `${lang.name}: ${lang.percentage}%`;
+            
+            languageBar.appendChild(segment);
+        });
+
+        // Create language list items
+        const languagesList = document.getElementById('languagesList');
+        languages.forEach((lang, index) => {
+            const item = document.createElement('div');
+            item.className = 'language-item';
+            item.innerHTML = `
+                <div class="language-info">
+                    <div class="language-color" style="background-color: ${lang.color}"></div>
+                    <span class="language-name">${lang.name}</span>
+                </div>
+                <div class="language-stats">
+                    <span class="lines-count">${lang.lines.toLocaleString()} lines</span>
+                    <span class="percentage">${lang.percentage}%</span>
+                </div>
+            `;
+            
+            languagesList.appendChild(item);
+        });
+
+        // Update total statistics
+        const totalLines = languages.reduce((sum, lang) => sum + lang.lines, 0);
+    </script>
+</body>
+</html>

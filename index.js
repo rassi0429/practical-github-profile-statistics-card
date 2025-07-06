@@ -15,7 +15,7 @@ app.get('/api/languages', async (req, res) => {
     return res.status(400).json({ error: 'Username is required' });
   }
 
-  const validThemes = ['default', 'compact', 'donut'];
+  const validThemes = ['default', 'pie', 'wave', 'grid'];
   const selectedTheme = validThemes.includes(theme) ? theme : 'default';
 
   try {
