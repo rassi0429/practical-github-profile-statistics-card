@@ -1,0 +1,25 @@
+{
+  "name": "github-profile-statistics-card",
+  "version": "1.0.0",
+  "description": "GitHub profile most used languages card generator",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "keywords": [
+    "github",
+    "profile",
+    "statistics",
+    "languages",
+    "card",
+    "svg"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^17.0.1",
+    "express": "^4.18.2"
+  }
+}
