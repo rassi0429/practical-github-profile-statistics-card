@@ -2,14 +2,34 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { fetchUserLanguages } from './lib/github.js';
 import { generateSVGCard } from './lib/card.js';
+import cacheManager from './lib/cache.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Initialize cache database
+try {
+  cacheManager.init();
+  console.log('Cache system initialized');
+} catch (error) {
+  console.error('Failed to initialize cache system:', error);
+}
+
+// Schedule periodic cache cleanup (every 6 hours)
+setInterval(() => {
+  try {
+    cacheManager.cleanup();
+    const stats = cacheManager.getStats();
+    console.log(`Cache stats - Total: ${stats.total}, Valid: ${stats.valid}, Expired: ${stats.expired}`);
+  } catch (error) {
+    console.error('Cache cleanup error:', error);
+  }
+}, 6 * 60 * 60 * 1000);
+
 app.get('/api/languages', async (req, res) => {
-  const { username, theme = 'default' } = req.query;
+  const { username, theme = 'default', nocache } = req.query;
   
   if (!username) {
     return res.status(400).json({ error: 'Username is required' });
@@ -19,11 +39,43 @@ app.get('/api/languages', async (req, res) => {
   const selectedTheme = validThemes.includes(theme) ? theme : 'default';
 
   try {
+    let svg = null;
+    
+    // Check cache first (unless nocache parameter is provided)
+    if (!nocache) {
+      try {
+        svg = cacheManager.get(username, selectedTheme);
+        if (svg) {
+          console.log(`Serving cached response for ${username}:${selectedTheme}`);
+          res.setHeader('Content-Type', 'image/svg+xml');
+          res.setHeader('Cache-Control', 'public, max-age=3600');
+          res.setHeader('X-Cache', 'HIT');
+          return res.send(svg);
+        }
+      } catch (cacheError) {
+        console.error('Cache read error:', cacheError);
+        // Continue without cache
+      }
+    }
+
+    // Cache miss or nocache - fetch fresh data
+    console.log(`Fetching fresh data for ${username}:${selectedTheme}`);
     const languages = await fetchUserLanguages(username);
-    const svg = generateSVGCard(username, languages, selectedTheme);
+    svg = generateSVGCard(username, languages, selectedTheme);
+    
+    // Store in cache
+    if (!nocache) {
+      try {
+        cacheManager.set(username, selectedTheme, svg);
+      } catch (cacheError) {
+        console.error('Cache write error:', cacheError);
+        // Continue without caching
+      }
+    }
     
     res.setHeader('Content-Type', 'image/svg+xml');
     res.setHeader('Cache-Control', 'public, max-age=3600');
+    res.setHeader('X-Cache', 'MISS');
     res.send(svg);
   } catch (error) {
     console.error('Error generating card:', error);
@@ -42,6 +94,49 @@ app.get('/api/languages', async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   }
+});
+
+// Cache management endpoints
+app.get('/api/cache/stats', (req, res) => {
+  try {
+    const stats = cacheManager.getStats();
+    res.json({
+      success: true,
+      stats: stats,
+      cacheDuration: '3 days'
+    });
+  } catch (error) {
+    console.error('Error getting cache stats:', error);
+    res.status(500).json({ error: 'Failed to get cache statistics' });
+  }
+});
+
+app.post('/api/cache/cleanup', (req, res) => {
+  try {
+    cacheManager.cleanup();
+    const stats = cacheManager.getStats();
+    res.json({
+      success: true,
+      message: 'Cache cleanup completed',
+      stats: stats
+    });
+  } catch (error) {
+    console.error('Error cleaning up cache:', error);
+    res.status(500).json({ error: 'Failed to cleanup cache' });
+  }
+});
+
+// Graceful shutdown
+process.on('SIGINT', () => {
+  console.log('Received SIGINT, shutting down gracefully...');
+  cacheManager.close();
+  process.exit(0);
+});
+
+process.on('SIGTERM', () => {
+  console.log('Received SIGTERM, shutting down gracefully...');
+  cacheManager.close();
+  process.exit(0);
 });
 
 app.listen(PORT, () => {
