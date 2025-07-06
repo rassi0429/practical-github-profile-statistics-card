@@ -13,7 +13,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: practical-github-profile-statistics-card
+  IMAGE_NAME: rassi0429/practical-github-profile-statistics-card
 
 jobs:
   build:
