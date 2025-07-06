@@ -14,7 +14,14 @@
     "compose:up": "docker-compose up -d",
     "compose:down": "docker-compose down",
     "compose:dev": "docker-compose --profile dev up -d app-dev",
-    "compose:logs": "docker-compose logs -f"
+    "compose:logs": "docker-compose logs -f",
+    "deploy": "./deploy.sh",
+    "deploy:nginx": "./deploy.sh --with-nginx",
+    "deploy:monitoring": "./deploy.sh --with-monitoring",
+    "deploy:full": "./deploy.sh --with-nginx --with-monitoring",
+    "deploy:stop": "./deploy.sh --stop",
+    "deploy:logs": "./deploy.sh --logs",
+    "deploy:status": "./deploy.sh --status"
   },
   "keywords": [
     "github",

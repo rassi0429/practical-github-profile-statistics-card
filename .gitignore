@@ -1,6 +1,23 @@
 node_modules/
 .env
+.env.production
 .vercel
 *.log
 cache.db
 cache.db-*
+
+# SSL certificates
+ssl/
+*.pem
+*.key
+
+# Backup files
+backups/
+*.tar.gz
+
+# Monitoring data
+monitoring/prometheus.yml
+monitoring/grafana/
+
+# Logs
+logs/
